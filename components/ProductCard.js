@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from "next/legacy/image";
-import { formatter } from './utils/helpers';
+import {formatter} from '../utils/helpers'
 
 
 const ProductCard = ({ product }) => {
