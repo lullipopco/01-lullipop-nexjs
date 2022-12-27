@@ -1,1 +1,0 @@
-{"c":["pages/_app","webpack"],"r":["pages/products/[product]"],"m":["./components/ProductPageContent.js","./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2Fsrv%2Fwebsites%2F01lullipop-nextjs%2Fpages%2Fproducts%2F%5Bproduct%5D.js&page=%2Fproducts%2F%5Bproduct%5D!","./pages/products/[product].js"]}

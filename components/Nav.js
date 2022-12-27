@@ -1,6 +1,18 @@
 import Link from 'next/link'
+import { useContext } from 'react'
+import { CartContext } from '../context/shopContext'
+import MiniCart from './MiniChart'
+
 
 export default function Nav() {
+  const { cart, cartOpen, setCartOpen } = useContext(CartContext)
+
+  let cartQuantity = 0
+  cart.map(item => {
+    return (cartQuantity += item?.variantQuantity)
+  })
+ 
+
   return (
     <header className="border-b sticky top-0 bg-stone-600">
         <div className="flex items-center justify-between max-w-6xl pt-4 pb-2 px-4 mx-auto lg:max-w-screen-xl">
@@ -8,9 +20,12 @@ export default function Nav() {
               <span className='text-lg pt-1 font-blod'></span>
               Shopify + Next.js
             </Link>
-            <a className='text-md font-bold cursor-pointer'>
-              Cart
+            <a className='text-md font-bold cursor-pointer'
+            onClick={() => setCartOpen(!cartOpen)}
+            >
+              Cart ({cartQuantity})
             </a>
+            <MiniCart cart={cart} />
         </div>
     </header>
   )

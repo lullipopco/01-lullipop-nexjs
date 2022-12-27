@@ -11,10 +11,11 @@ export default function ProductOptions({ name, values, selectedOptions, setOptio
                     const checked = selectedOptions[name] === value
 
                     return (
-                        <label key={id} htmlfor={id}>
+                        <label key={id} htmlFor={id}>
                             <input
                             className='sr-only'
                             type="radio"
+                            id={id}
                             name={`option-${name}`}
                             value={value}
                             checked={checked}
