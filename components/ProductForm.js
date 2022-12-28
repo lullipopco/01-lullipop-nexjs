@@ -1,56 +1,70 @@
-import { useState, useContext} from 'react'
-import {formatter} from '../utils/helpers'
-import ProductOptions from './ProductOptions'
-import { CartContext } from '../context/shopContext'
+import { useState, useEffect, useContext } from "react"
+import { formatter } from '../utils/helpers'
+import ProductOptions from "./ProductOptions"
+import { CartContext } from "../context/shopContext"
+
+
+// setup inventory fetcher
+const fetchInventory = (url, id) =>
+  axios
+    .get(url, {
+      params: {
+        id: id,
+      },
+    })
+    .then((res) => res.data)
 
 export default function ProductForm({ product }) {
-    const { addToCart } = useContext(CartContext)
 
-    const allVariantOptions = product.variants.edges?.map(variant => {
-        const allOptions = {}
 
-        variant.node.selectedOptions.map(item => {
-            allOptions[item.name] = item.value
-        })
+  const [available, setAvailable] = useState(true)
 
-        return {
-            id: variant.node.id,
-            title: product.title,
-            handle: product.handle,
-            image: variant.node.image?.url,
-            otiions: allOptions,
-            variantTitle: variant.node.title,
-            variantPrice: variant.node.priceV2.amount,
-            variantQuantity: 1
+  const { addToCart } = useContext(CartContext)
 
-        }
+  const allVariantOptions = product.variants.edges?.map(variant => {
+    const allOptions = {}
+
+    variant.node.selectedOptions.map(item => {
+      allOptions[item.name] = item.value
     })
 
-    const defaultValues = {}
-    product.options.map(item => {
-        defaultValues[item.name] = item.values[0]
-    })
-    
-    const [selectedVariant, setSelectedVariant] = useState(allVariantOptions[0])
-    const [selectedOptions, setselectedOptions] = useState(defaultValues)
-
-    function setOptions(name, value) {
-        setselectedOptions(prevState => {
-            return { ...prevState, [name]: value}
-        })
-
-        const selection = {
-            ...selectedOptions,
-            [name]: value
-        }
-
-        allVariantOptions.map(item => {
-            if (JSON.stringify(item.options) === JSON.stringify(selection)){
-                setSelectedVariant(item)
-            }
-        })
+    return {
+      id: variant.node.id,
+      title: product.title,
+      handle: product.handle,
+      image: variant.node.image?.url,
+      options: allOptions,
+      variantTitle: variant.node.title,
+      variantPrice: variant.node.priceV2.amount,
+      variantQuantity: 1
     }
-   
+  })
+
+  const defaultValues = {}
+  product.options.map(item => {
+    defaultValues[item.name] = item.values[0]
+  })
+
+  const [selectedVariant, setSelectedVariant] = useState(allVariantOptions[0])
+  const [selectedOptions, setSelectedOptions] = useState(defaultValues)
+
+  function setOptions(name, value) {
+    setSelectedOptions(prevState => {
+      return { ...prevState, [name]: value }
+    })
+
+    const selection = {
+      ...selectedOptions,
+      [name]: value
+    }
+
+    allVariantOptions.map(item => {
+      if (JSON.stringify(item.options) === JSON.stringify(selection)) {
+        setSelectedVariant(item)
+      }
+    })
+  }
+
   return (
 
     <div className='rounded-2xl p-4 shadow-lg flex flex-col w-full md:w-1/3'>
@@ -71,7 +85,8 @@ export default function ProductForm({ product }) {
          onClick={() => {
             addToCart(selectedVariant)
          }}
-         className='bg-black rounded-lg text-white px-2 py-3 hover:bg-gray-400'>Add To Cart</button>
+         className='bg-black rounded-lg text-white px-2 py-3 mt-3 hover:bg-gray-400'>Add To Cart</button>
     </div>
   )
 }
+ 

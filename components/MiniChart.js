@@ -1,15 +1,16 @@
 import { Fragment, useContext, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import { CartContext } from '../context/shopContext'
 import { formatter } from '../utils/helpers'
+import Link from 'next/link'
 
 
 
 export default function MiniCart({ cart }) {
   const cancelButtonRef = useRef()
-  const { cartOpen, setCartOpen, checkoutUrl, removeCart} = useContext(CartContext)
+  const { cartOpen, setCartOpen, checkoutUrl, removeCartItem} = useContext(CartContext)
 
     let cartTotal = 0
     cart.map(item => {
@@ -66,10 +67,11 @@ export default function MiniCart({ cart }) {
                           </button>
                         </div>
                       </div>
-
                       <div className="mt-8">
                         <div className="flow-root">
-                          <ul role="list" className="-my-6 divide-y divide-gray-200">
+                          {
+                            cart.length > 0 ?
+                            <ul role="list" className="-my-6 divide-y divide-gray-200">
                             {cart.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -80,12 +82,13 @@ export default function MiniCart({ cart }) {
                                     objectFit='cover'
                                   />
                                 </div>
-
                                 <div className="ml-4 flex flex-1 flex-col">
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <a href={product.href}>{product.title}</a>
+                                        <Link href={`/products/${product.handle}`} passHref>
+                                        <a onClick={() => setCartOpen(false)}>{product.title}</a>
+                                        </Link>
                                       </h3>
                                       <p className="ml-4">{formatter.format(product.variantPrice)}</p>
                                     </div>
@@ -96,6 +99,7 @@ export default function MiniCart({ cart }) {
 
                                     <div className="flex">
                                       <button
+                                      onClick={() => removeCartItem(product.id)}
                                         type="button"
                                         className="font-medium text-indigo-600 hover:text-indigo-500"
                                       >
@@ -106,7 +110,12 @@ export default function MiniCart({ cart }) {
                                 </div>
                               </li>
                             ))}
-                          </ul>
+                          </ul> :
+                          <div>
+                            <p> Nothing In your Cart</p>
+                          </div>
+                          }
+                
                         </div>
                       </div>
                     </div>
